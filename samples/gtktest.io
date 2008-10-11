@@ -1,4 +1,4 @@
-CFFI
+CInvoke
 
 libgtk := Library clone do (
     setName("libgtk-x11-2.0.so")

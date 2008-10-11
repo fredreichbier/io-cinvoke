@@ -1,15 +1,17 @@
 #!/usr/bin/env io
 
-/* CFFI - A C function interface for Io
+/* CInvoke - A C function interface for Io
+
+   heavily based on CFFI by
    Copyright (c) 2006 Trevor Fancher. All rights reserved.
    All code licensed under the New BSD license.
  */
 
-CFFI
+CInvoke
 
 LibC := Object clone do(
 	Types := Object clone do(
-		appendProto(CFFI Types)
+		appendProto(CInvoke Types)
 		
 		Size_t := Long
 		Time_t := Long
