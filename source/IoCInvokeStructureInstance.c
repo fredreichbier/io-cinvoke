@@ -12,6 +12,8 @@ Describe your addon here.
 
 #define DATA(self) ((IoCInvokeStructureInstanceData *)(IoObject_dataPointer(self)))
 
+// docDependsOn("CInvokeDataType")
+
 // _tag makes an IoTag for the bookkeeping of names and methods for this proto
 IoTag *IoCInvokeStructureInstance_newTag(void *state)
 {

@@ -5,7 +5,7 @@
    All code licensed under the New BSD license.
  */
 
-// docDependsOn("IoDataType.c")
+// docDependsOn("CInvokeStructureInstance")
 
 #include "IoCInvokePointer.h"
 #include "IoCInvokeDataType.h"
