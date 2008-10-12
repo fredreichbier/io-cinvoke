@@ -10,3 +10,9 @@ int testme(MyStruct* s) {
 //	printf("My a value is: %d!\n", s->a);
 	return s->a;
 }
+
+typedef void (* TestFunc());
+
+void test_callback(TestFunc func) {
+	func(123);
+}

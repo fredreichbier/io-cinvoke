@@ -9,6 +9,7 @@
 //
 #include "IoCInvokeDataType.h"
 #include "IoCInvokePointer.h"
+#include "IoCInvokeCallback.h"
 #include "IoCInvokeStructureInstance.h"
 #include "IoSeq.h"
 #include "IoNumber.h"
@@ -87,7 +88,6 @@ void *IoCInvokeDataType_ValuePointerFromObject_(IoObject *o)
 
 	// this is a hack so macros relying on self will work
 	self = o;
-
 	if (ISNUMBER(o))
 	{
 //		number = IoState_doCString_(IoObject_state(o), "CInvoke Types Double clone");
@@ -116,6 +116,9 @@ void *IoCInvokeDataType_ValuePointerFromObject_(IoObject *o)
 	}
 	else if(ISCInvokeStructureInstance(o)) {
 		return IoCInvokeStructureInstance_valuePointer(o);
+	}
+	else if(ISCInvokeCallback(o)) {
+		return IoCInvokeCallback_valuePointer(o);
 	}
 	else {
 		return NULL;
@@ -301,7 +304,7 @@ cinv_type_t IoCInvokeDataType_cinvType_t(IoCInvokeDataType *self)
 		return (char)0;
 	}
 
-	printf("CinvType_t typestring: '%s'", typeString);
+	printf("CinvType_t typestring: '%s'\n", typeString);
 
 	switch (c = typeString[0])
 	{
