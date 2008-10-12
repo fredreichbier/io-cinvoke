@@ -144,7 +144,7 @@ IoCInvokeDataType *IoCInvokeDataType_setValue(IoCInvokeDataType *self, IoObject 
 	}
 
 	value = IoCInvokeDataType_ValuePointerFromObject_(IoMessage_locals_valueArgAt_(m, locals, 0));
-	printf("_setValue: '%s'\n",  CSTRING(IoState_on_doCString_withLabel_(IOSTATE, self, "typeString", "IoCInvokeDataType_setValue")));
+	//printf("_setValue: '%s'\n",  CSTRING(IoState_on_doCString_withLabel_(IOSTATE, self, "typeString", "IoCInvokeDataType_setValue")));
 	switch (c = CSTRING(IoState_on_doCString_withLabel_(IOSTATE, self, "typeString", "IoCInvokeDataType_setValue"))[0])
 	{
 		case 'c':
@@ -191,7 +191,7 @@ IoObject *IoCInvokeDataType_objectFromData_(IoCInvokeDataType *self, void *data)
 	IoCInvokePointer *pointer;
 
 	typeString = CSTRING(IoState_on_doCString_withLabel_(IOSTATE, self, "typeString", "IoCInvokeDataType_objectFromData_"));
-	printf("_objectFromData: '%s'\n", typeString);
+	//printf("_objectFromData: '%s'\n", typeString);
 
 	switch (c = typeString[0])
 	{
@@ -253,7 +253,7 @@ char IoCInvokeDataType_cinvType(IoCInvokeDataType *self)
 	{
 		return (char)0;
 	}
-	printf("Typestring is '%s'\n", typeString);
+	//printf("Typestring is '%s'\n", typeString);
 
 	switch (c = typeString[0])
 	{
@@ -304,7 +304,7 @@ cinv_type_t IoCInvokeDataType_cinvType_t(IoCInvokeDataType *self)
 		return (char)0;
 	}
 
-	printf("CinvType_t typestring: '%s'\n", typeString);
+	//printf("CinvType_t typestring: '%s'\n", typeString);
 
 	switch (c = typeString[0])
 	{
@@ -351,7 +351,7 @@ void *IoCInvokeDataType_valuePointer(IoCInvokeDataType *self)
 
 	typeString = CSTRING(IoState_on_doCString_withLabel_(IOSTATE, self, "typeString", "IoCInvokeDataType_valuePointer"));
 	data = DATA(self);
-	printf("_valuePointer: '%s'\n", typeString);
+	//printf("_valuePointer: '%s'\n", typeString);
 	switch (c = typeString[0])
 	{
 		case 'c': return &(data->type.c);

@@ -11,8 +11,9 @@ int testme(MyStruct* s) {
 	return s->a;
 }
 
-typedef void (* TestFunc());
+typedef int (*TestFunc)();
 
 void test_callback(TestFunc func) {
-	func(123);
+	int i = func(123);
+	printf("That should be 456: %d\n", i);
 }

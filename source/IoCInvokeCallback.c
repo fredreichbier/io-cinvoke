@@ -107,13 +107,19 @@ void IoCInvokeCallback_callback(CInvFunction* function, void* parameters[], void
 	funArgTypeObjects = IoList_rawList(IoObject_getSlot_(self, IOSYMBOL("argumentTypes")));
 	funArgCount = (int)List_size(funArgTypeObjects);
 	funRetTypeObject = IoObject_getSlot_(self, IOSYMBOL("returnType"));
-	printf("yeh, callback\n");
+	//printf("yeh, callback\n");
 	for (i = 0; i < funArgCount; i++)
 	{
 		IoObject* o = IoCInvokeDataType_objectFromData_(List_at_(funArgTypeObjects, i), parameters[i]);
 		IoMessage_addCachedArg_(msg, o);
 	}
-	IoMessage_locals_performOn_(msg, data->locals, self);
+	IoObject* result = IoMessage_locals_performOn_(msg, data->locals, self);
+	// pass the result to the C function
+	size_t mysize = getSizeFromSymbol(IoCInvokeDataType_cinvType(funRetTypeObject));
+	void* ptr = IoCInvokeDataType_ValuePointerFromObject_(result);
+	// TODO: *That* looks ugly. Can it be better?
+	memmove(returnout, ptr, mysize);
+	// TODO: memory management stuff. That is probably a memory lag.
 }
 
 IoObject* IoCInvokeCallback_setMessage(IoCInvokeCallback* self, IoObject* locals, IoMessage* m) {
@@ -172,6 +178,7 @@ IoObject *IoCInvokeCallback_setCallback(IoCInvokeCallback *self)
 	cb = cinv_callback_create(context, funInterface, DATA(self), &IoCInvokeCallback_callback);
 	if(!cb) {
 		printf("something went wrong with the callback.");
+		free(funArgTypes);
 		return IONIL(self);
 	}
 	DATA(self)->callback = cb;

@@ -7,10 +7,11 @@ MyStruct := Structure clone setLibrary(lib) addMember("a", Types SInt) addMember
 
 testme := Function clone setLibrary(lib) setName("testme") setArgumentTypes(list(MyStruct ptr)) setReturnType(Types SInt)
 
-cb := Callback clone setLibrary(lib) setArgumentTypes(list(Types SInt)) setReturnType(Types Void)
+cb := Callback clone setLibrary(lib) setArgumentTypes(list(Types SInt)) setReturnType(Types SInt)
 cb setMessage(cb, message(yeh))
 cb yeh := method(a,
-    writeln("YAY, IT WORKS, this should be 123: ", a)
+    writeln("This should be 123: ", a)
+    456
 )
 test_callback := Function clone setLibrary(lib) setName("test_callback") setArgumentTypes(list(cb)) setReturnType(Types Void) 
 //inst := StructureInstance setLibrary(lib) setStructure(MyStruct) setValue("a", 6) setValue("b", "Hello")
