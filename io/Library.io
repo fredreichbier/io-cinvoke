@@ -14,7 +14,7 @@ CInvoke Library do(
 	    func setName(name)
 	    func setArgumentTypes(arguments)
 	    func setReturnType(rettype)
-	    self newSlot(name, func)
+	    self setSlot(name, func asMethod)
 	    self
 	)
 )

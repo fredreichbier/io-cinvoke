@@ -1,4 +1,4 @@
-CFFI
+CInvoke
 
 libc := Library clone setName("libc.so.6")
 time_t := Types Long clone
