@@ -5,7 +5,7 @@ That is a C/Invoke addon for Io, based on Trevor Fancher's CFFI addon.
 
 To get it:
 
-.. 
+:: 
 
 	cd my_io_installation/addons
 	git clone git://github.com/fredreichbier/io-cinvoke.git CInvoke
