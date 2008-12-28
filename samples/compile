@@ -1,3 +1,0 @@
-#!/bin/sh
-gcc -g -Wall -DCINVOKE_BUILD -DARCH_GCC_X86_UNIX -fpic -c structtest.c -o structtest.o
-gcc -shared -o libstructtest.so structtest.o
