@@ -8,6 +8,10 @@ Callback do (
         Pointer clone toType(self)
     )
 
+    ptr := method(
+        Ptr setValue(self)
+    )
+
     init := method(
         self ptr := method(
             Ptr setValue(self)

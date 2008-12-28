@@ -29,7 +29,7 @@ lib newFunction("test_callback", list(Callback),   Types Void)
 #               ^^ name          ^^ argument types ^^ return type
 
 # Now you can call it like a regular method.
-lib test_callback(Pointer clone toType(cb) setValue(cb))
+lib test_callback(cb ptr)
 # Desired output:
 # 
 # This should be 123: 123
@@ -53,7 +53,11 @@ test_struct := Function clone do(
 
 # Let's make a structure instance. That's not very elegant at the moment.
 struct := StructureInstance clone setLibrary(lib) setStructure(MyStruct)
-struct setValue("a", 30)
+# Here's a little convenience again. It's possible to write the verbose one:
+#struct setValue("a", 30)
+# Or:
+struct a := 30
+
 struct setValue("b", "Hello C!")
 
 # If you don't use `lib newFunction`, you have to
@@ -71,7 +75,9 @@ writeln("That should be 31: " .. test_struct_lazy(struct ptr))
 lib newFunction("create_struct", list(Types Int), MyStruct Ptr)
 inst := lib create_struct(123) value # it returns a pointer, so we have to get the value.
 # It's now possible to get the values:
+# The verbose one
 writeln("A new structure instance arrived: " .. inst getValue("a"))
-
+# The lazy one
+writeln("A new structure instance arrived: " .. inst a)
 
 
