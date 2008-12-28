@@ -80,4 +80,6 @@ writeln("A new structure instance arrived: " .. inst getValue("a"))
 # The lazy one
 writeln("A new structure instance arrived: " .. inst a)
 
+inst b println
+
 
