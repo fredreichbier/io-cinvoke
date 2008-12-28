@@ -22,8 +22,7 @@ Its dependencies:
 
 CInvoke is licensed under the revised BSD license.
 
-Unfortunately, CInvoke for Io is only tested with the included samples. 
-A test gtk binding does not work. So, it is probably not usable for everyone
-yet, but hopefully in the future.
-There is no real documentation at the moment, but it's planned.
-Have fun. Or anything else.
+CInvoke for Io is only tested with the included samples; 
+there is a minimal gtk example included.
+
+There is no documentation at the moment, but it's planned.
