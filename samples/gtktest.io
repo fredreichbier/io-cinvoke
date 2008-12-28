@@ -14,7 +14,7 @@ libgtk := Library clone do (
 
 libgobject := Library clone do (
     setName("libgobject-2.0.so")
-    newFunction("g_signal_connect_data", list(Types Ptr, Types CString, ev, Types Ptr, Types Ptr, Types UInt), Types Long)
+    newFunction("g_signal_connect_data", list(Types Ptr, Types CString, Callback Ptr, Types Ptr, Types Ptr, Types UInt), Types Long)
 )
 
 #libgtk gtk_init
@@ -30,5 +30,5 @@ ev destroyed := method(
     return(0)
 )
 
-libgobject g_signal_connect_data(win, "delete-event", ev, nil, nil, 0) println
+libgobject g_signal_connect_data(win, "delete-event", ev ptr, nil, nil, 0) println
 libgtk gtk_main

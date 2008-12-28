@@ -141,7 +141,7 @@ IoObject *IoCInvokeCallback_setCallback(IoCInvokeCallback *self)
 	List *funArgTypeObjects;
 	library = IoObject_getSlot_(self, IOSYMBOL("library"));
 
-	CInvContext* context = ((IoCInvokeLibraryData *)(IoObject_dataPointer(library)))->context;
+	CInvContext* context = IoCInvokeLibrary_getContext_(library); 
 	DATA(self)->context = context;
 
 	library = IoObject_getSlot_(self, IOSYMBOL("library"));
@@ -175,7 +175,6 @@ IoObject *IoCInvokeCallback_setCallback(IoCInvokeCallback *self)
 	}
 
 	// create the callback object
-	//
 	CInvCallback* cb;
 	cb = cinv_callback_create(context, funInterface, DATA(self), IoCInvokeCallback_callback);
 	if(!cb) {
@@ -197,6 +196,6 @@ void* IoCInvokeCallback_valuePointer(IoObject* self) {
         DATA(self)->entrypoint = cinv_callback_getentrypoint(DATA(self)->context, DATA(self)->callback);
     }
     //printf("[Callback] My callback: %d\n", &DATA(self)->callback);
-    return &(DATA(self)->entrypoint);
+    return DATA(self)->entrypoint;
 }
 

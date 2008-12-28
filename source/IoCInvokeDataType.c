@@ -128,7 +128,7 @@ void *IoCInvokeDataType_ValuePointerFromObject_(IoObject *o)
 		return IoCInvokeCallback_valuePointer(o);
 	}
 	else {
-        //printf("WTF\n");
+        printf("Unknown DataType in IoCInvokeDataType_ValuePointerFromObject_!\n");
 		return NULL;
 	}
 }

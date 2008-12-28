@@ -3,9 +3,15 @@ Callback do (
     newSlot("argumentTypes")
     newSlot("returnType")
     newSlot("typeString", "^")
-	init := method(
-		self ptr := method(
-			    Pointer toType(self)
-				    )
-		    )
+
+    Ptr := method(
+        Pointer clone toType(self)
+    )
+
+    init := method(
+        self ptr := method(
+            Ptr setValue(self)
+        )
+        resend
+    )
 )
