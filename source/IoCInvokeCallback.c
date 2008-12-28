@@ -159,6 +159,8 @@ IoObject *IoCInvokeCallback_setCallback(IoCInvokeCallback *self)
 	}
 	funRetType[0] = IoCInvokeDataType_cinvType(funRetTypeObject);
 	funRetType[1] = '\0';
+
+    //printf("[Callback] FunArgTypes: %s; FunRetType: %s\n", funArgTypes, funRetType);
 	
 	if(funRetType[0] == 0) {
 		funInterface = cinv_function_create(context, CINV_CC_DEFAULT, funRetType+1, funArgTypes);
@@ -175,7 +177,7 @@ IoObject *IoCInvokeCallback_setCallback(IoCInvokeCallback *self)
 	// create the callback object
 	//
 	CInvCallback* cb;
-	cb = cinv_callback_create(context, funInterface, DATA(self), &IoCInvokeCallback_callback);
+	cb = cinv_callback_create(context, funInterface, DATA(self), IoCInvokeCallback_callback);
 	if(!cb) {
 		printf("something went wrong with the callback.");
 		free(funArgTypes);
@@ -191,6 +193,10 @@ void* IoCInvokeCallback_valuePointer(IoObject* self) {
 	if(!DATA(self)->callback) {
 		IoCInvokeCallback_setCallback(self);
 	}
-	return cinv_callback_getentrypoint(DATA(self)->context, DATA(self)->callback);
+    if(!DATA(self)->entrypoint) {
+        DATA(self)->entrypoint = cinv_callback_getentrypoint(DATA(self)->context, DATA(self)->callback);
+    }
+    //printf("[Callback] My callback: %d\n", &DATA(self)->callback);
+    return &(DATA(self)->entrypoint);
 }
 

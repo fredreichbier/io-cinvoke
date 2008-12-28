@@ -88,6 +88,7 @@ void *IoCInvokeDataType_ValuePointerFromObject_(IoObject *o)
 
 	// this is a hack so macros relying on self will work
 	self = o;
+    //printf("[DataType] INVOKED, and it's a ...");
 	if (ISNUMBER(o))
 	{
 //		number = IoState_doCString_(IoObject_state(o), "CInvoke Types Double clone");
@@ -95,32 +96,39 @@ void *IoCInvokeDataType_ValuePointerFromObject_(IoObject *o)
 
 //		DATA(number)->type.d = IoObject_dataDouble(o);
 		DATA(number)->type.i = IoNumber_asInt(o); // TODO: so, why? Double should be the proper way :s
-
+        //printf("number\n");
 		return IoCInvokeDataType_ValuePointerFromObject_(number);
 	}
 	else if (ISSEQ(o))
 	{
+        //printf("seq\n");
 		return (char **)IoObject_dataPointer(o);
 	}
 	else if (ISNIL(o))
 	{
+        //printf("nil\n");
 		return &IoCInvokeDataType_null;
 	}
 	else if(ISCInvokePointer(o))
 	{
+        //printf("ptr\n");
 		return IoCInvokePointer_valuePointer(o);
 	}
 	else if(ISCInvokeDataType(o))
 	{
+        //printf("datatype\n");
 		return IoCInvokeDataType_valuePointer(o);
 	}
 	else if(ISCInvokeStructureInstance(o)) {
+        //printf("struct\n");
 		return IoCInvokeStructureInstance_valuePointer(o);
 	}
 	else if(ISCInvokeCallback(o)) {
+        //printf("Callback value.\n");
 		return IoCInvokeCallback_valuePointer(o);
 	}
 	else {
+        //printf("WTF\n");
 		return NULL;
 	}
 }

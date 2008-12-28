@@ -68,9 +68,9 @@ void IoCInvokeLibrary_free(IoCInvokeLibrary *self)
 void *IoCInvokeLibrary_rawGetFunctionPointer_(IoCInvokeLibrary *self, const char *name)
 {
 	CInvLibrary *library = DATA(self)->library;
-	if (!(DATA(self)->context)) { 
-		DATA(self)->context = cinv_context_create();
-	}
+
+    IoCInvokeLibrary_getContext_(self);
+    //printf("[Library] Name: %s; Context: %d\n", name, DATA(self)->context);
 
 	if (!library)
 	{
@@ -86,8 +86,11 @@ void *IoCInvokeLibrary_rawGetFunctionPointer_(IoCInvokeLibrary *self, const char
 }
 
 CInvContext* IoCInvokeLibrary_getContext_(IoCInvokeLibrary* self) {
-	if (!(DATA(self)->context)) { 
-		DATA(self)->context = cinv_context_create();
+	//printf("[Library] _getContext_ called!\n");
+    static CInvContext *ctx = 0;
+    if(ctx == 0) ctx = cinv_context_create();
+    if (!(DATA(self)->context)) { 
+		DATA(self)->context = ctx;
 	}
-	return (DATA(self)->context);
+    return (DATA(self)->context);
 }	

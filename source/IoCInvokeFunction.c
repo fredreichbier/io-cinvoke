@@ -94,7 +94,8 @@ IoObject *IoCInvokeFunction_call(IoCInvokeFunction *self, IoObject *locals, IoMe
 	//printf("Funargtypes: '%s'\n", funArgTypes);
 	funRetType[0] = IoCInvokeDataType_cinvType(funRetTypeObject);
 	funRetType[1] = '\0';
-	
+	//printf("[Function] FunArgTypes: %s; FunRetType: %s\n", funArgTypes, funRetType);
+
 	if(funRetType[0] == 0) {
 		funInterface = cinv_function_create(context, CINV_CC_DEFAULT, funRetType+1, funArgTypes);
 	} else {
@@ -115,7 +116,6 @@ IoObject *IoCInvokeFunction_call(IoCInvokeFunction *self, IoObject *locals, IoMe
 		{
 			o = IoMessage_locals_valueArgAt_(m, locals, i);
 			funArgVals[i] = IoCInvokeDataType_ValuePointerFromObject_(o);
-			//printf("yee, current: %p\n", funArgVals[i]);
 		}
 		status = cinv_function_invoke(context, funInterface, funPointer, funRetVal, funArgVals);
 		if(!status) {

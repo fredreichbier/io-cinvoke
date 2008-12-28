@@ -16,7 +16,8 @@ typedef IoObject IoCInvokeCallback;
 typedef struct IoCInvokeCallback {
 	CInvContext* context;
 	CInvCallback* callback;
-	
+	void *entrypoint;
+
 	IoObject* target;
 	IoObject* locals;
 	IoMessage* message;
