@@ -87,10 +87,14 @@ void *IoCInvokeLibrary_rawGetFunctionPointer_(IoCInvokeLibrary *self, const char
 
 CInvContext* IoCInvokeLibrary_getContext_(IoCInvokeLibrary* self) {
 	//printf("[Library] _getContext_ called!\n");
-    static CInvContext *ctx = 0;
-    if(ctx == 0) ctx = cinv_context_create();
     if (!(DATA(self)->context)) { 
-		DATA(self)->context = ctx;
+		DATA(self)->context = getGlobalContext();
 	}
     return (DATA(self)->context);
-}	
+}
+
+CInvContext *getGlobalContext() {
+    static CInvContext *ctx = 0;
+    if(ctx == 0) ctx = cinv_context_create();
+    return ctx;
+}

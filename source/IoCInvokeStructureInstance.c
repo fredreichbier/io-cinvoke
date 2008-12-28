@@ -6,6 +6,7 @@ Describe your addon here.
 */
 
 #include "IoState.h"
+#include "IoMap.h"
 #include "IoCInvokeStructureInstance.h"
 #include "IoCInvokeLibrary.h"
 #include "IoCInvokeDataType.h"
@@ -48,8 +49,9 @@ IoObject *IoCInvokeStructureInstance_proto(void *state)
         // with NULLs
         {
                 IoMethodTable methodTable[] = {
-			{"setValue", IoCInvokeStructureInstance_setValue},
-			{"setLibrary", IoCInvokeStructureInstance_setLibrary},
+			        {"setValue", IoCInvokeStructureInstance_setValue},
+			        {"setLibrary", IoCInvokeStructureInstance_setLibrary},
+                    {"getValue", IoCInvokeStructureInstance_getValue},
                 	{NULL, NULL},
                 };
                 IoObject_addMethodTable_(self, methodTable);
@@ -94,7 +96,7 @@ IoObject *IoCInvokeStructureInstance_setValue(IoCInvokeStructureInstance *self, 
 {
 	CInvContext* context = DATA(self)->context;
 	CInvStructure* structure = IoCInvokeStructure_getStructure_(IoObject_getSlot_(self, IOSYMBOL("structure")));
-        if(!DATA(self)->instance) {
+    if(!DATA(self)->instance) {
 		DATA(self)->instance = cinv_structure_create_instance(context, structure);
 	}
 	char* name = IoMessage_locals_cStringArgAt_(m, locals, 0);
@@ -103,6 +105,21 @@ IoObject *IoCInvokeStructureInstance_setValue(IoCInvokeStructureInstance *self, 
 		printf("Something went wrong with StructureInstance setValue\n");
 	};
 	return self;
+}
+
+IoObject *IoCInvokeStructureInstance_getValue(IoCInvokeStructureInstance *self, IoObject *locals, IoMessage *m) {
+ 	CInvContext* context = DATA(self)->context;
+	CInvStructure* structure = IoCInvokeStructure_getStructure_(IoObject_getSlot_(self, IOSYMBOL("structure")));
+    if(!DATA(self)->instance) {
+		DATA(self)->instance = cinv_structure_create_instance(context, structure); // ... is that intelligent?
+	}
+	char* name = IoMessage_locals_cStringArgAt_(m, locals, 0);
+	void* value = cinv_structure_instance_getvalue(context, structure, DATA(self)->instance, name);
+    IoObject *memberType = IoMap_rawAt(IoObject_getSlot_(
+                IoObject_getSlot_(self, IOSYMBOL("structure")), IOSYMBOL("memberTypes")), 
+                IOSYMBOL(name));
+    IoObject *io_value = IoCInvokeDataType_objectFromData_(memberType, value);
+    return io_value;
 }
 
 IoObject *IoCInvokeStructureInstance_setLibrary(IoCInvokeStructureInstance *self, IoObject *locals, IoMessage *m)
@@ -114,4 +131,12 @@ IoObject *IoCInvokeStructureInstance_setLibrary(IoCInvokeStructureInstance *self
 
 void* IoCInvokeStructureInstance_valuePointer(IoCInvokeStructureInstance* self) {
 	return DATA(self)->instance;
+}
+
+IoObject *IoCInvokeStructureInstance_objectFromData_(IoObject *structure, void *data) {
+    IoObject *self = IoCInvokeStructureInstance_new(((IoState *)(IoObject_tag(structure)->state))); // because IOSTATE depends on `self`
+    DATA(self)->context = getGlobalContext();
+    DATA(self)->instance = data;
+    IoObject_setSlot_to_(self, IOSYMBOL("structure"), structure);
+    return self;
 }

@@ -66,9 +66,12 @@ writeln("That should be 31: " .. test_struct call(struct ptr))
 test_struct_lazy := test_struct asMethod
 writeln("That should be 31: " .. test_struct_lazy(struct ptr))
 
-# We will be able to receive structs from C, too.
-# TODO.
+# We are able to receive structs from C, too.
 
-lib newFunction("create_struct", list(), MyStruct Ptr)
-lib create_struct value println
+lib newFunction("create_struct", list(Types Int), MyStruct Ptr)
+inst := lib create_struct(123) value # it returns a pointer, so we have to get the value.
+# It's now possible to get the values:
+writeln("A new structure instance arrived: " .. inst getValue("a"))
+
+
 

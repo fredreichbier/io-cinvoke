@@ -15,7 +15,7 @@ typedef IoObject IoCInvokeStructureInstance;
 
 typedef struct IoCInvokeStructureInstance {
 	CInvContext* context;
-	CInvStructure* structure;
+//	CInvStructure* structure;
 	void* instance;
 } IoCInvokeStructureInstanceData;
 
@@ -28,8 +28,10 @@ void IoCInvokeStructureInstance_free(IoCInvokeStructureInstance *self);
 
 // define our custom C functions
 IoObject *IoCInvokeStructureInstance_setValue(IoCInvokeStructureInstance *self, IoObject *locals, IoMessage *m);
+IoObject *IoCInvokeStructureInstance_getValue(IoCInvokeStructureInstance *self, IoObject *locals, IoMessage *m);
 IoObject *IoCInvokeStructureInstance_setLibrary(IoCInvokeStructureInstance *self, IoObject *locals, IoMessage *m);
 void* IoCInvokeStructureInstance_valuePointer(IoCInvokeStructureInstance* self);
+IoObject *IoCInvokeStructureInstance_objectFromData_(IoObject *structure, void *data);
 
 #endif
 

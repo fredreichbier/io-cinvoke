@@ -28,5 +28,6 @@ void IoCInvokeLibrary_free(IoCInvokeLibrary *self);
 
 void *IoCInvokeLibrary_rawGetFunctionPointer_(IoCInvokeLibrary *self, const char *name);
 CInvContext* IoCInvokeLibrary_getContext_(IoCInvokeLibrary* self);
+CInvContext *getGlobalContext();
 
 #endif

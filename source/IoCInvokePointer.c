@@ -9,6 +9,7 @@
 
 #include "IoCInvokePointer.h"
 #include "IoCInvokeDataType.h"
+#include "IoCInvokeStructureInstance.h"
 #include "IoMap.h"
 #include "IoSeq.h"
 #include "IoNumber.h"
@@ -177,9 +178,12 @@ IoObject *IoCInvokePointer_value(IoCInvokePointer *self, IoObject *locals, IoMes
 	{
 		return IoCInvokeDataType_objectFromData_(pointedToType, DATA(self)->ptr);
 	}
+    else if(ISCInvokeStructure(pointedToType)) {
+        return IoCInvokeStructureInstance_objectFromData_(pointedToType, DATA(self)->ptr);
+    }
 	else
 	{
-		IoState_error_(IOSTATE, m, "attempt to dereference Pointer object whose pointedToType was neither a Pointer or a DataType.");
+		IoState_error_(IOSTATE, m, "attempt to dereference Pointer object whose pointedToType was neither a Pointer nor a DataType nor a Structure.");
 		return IONIL(self);
 	}
 }

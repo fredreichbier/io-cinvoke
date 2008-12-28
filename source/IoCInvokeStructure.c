@@ -10,6 +10,7 @@
 #include "IoCInvokeStructure.h"
 #include "IoCInvokeLibrary.h"
 #include "IoCInvokeDataType.h"
+#include "IoMap.h"
 #include <cinvoke.h>
 
 #define DATA(self) ((IoCInvokeStructureData *)(IoObject_dataPointer(self)))
@@ -48,6 +49,7 @@ IoCInvokeStructure *IoCInvokeStructure_rawClone(IoCInvokeStructure *proto)
 {
 	IoObject *self = IoObject_rawClonePrimitive(proto);
 	IoObject_setDataPointer_(self, calloc(1, sizeof(IoCInvokeStructureData)));
+    IoObject_setSlot_to_(self, IOSYMBOL("memberTypes"), IoMap_new(IOSTATE));
 	return self;
 }
 
@@ -73,6 +75,9 @@ IoObject* IoCInvokeStructure_addMember(IoCInvokeStructure* self, IoObject* local
 	if(!cinv_structure_addmember_value(context, DATA(self)->structure, name, type)) {
 		printf("error with adding member\n");
 	}
+    // append it to the `memberTypes` Map
+    IoObject *memberTypes = IoObject_getSlot_(self, IOSYMBOL("memberTypes"));
+    IoMap_rawAtPut(memberTypes, IoMessage_locals_valueArgAt_(m, locals, 0), IoMessage_locals_valueArgAt_(m, locals, 1));
 
 	return self;
 }
