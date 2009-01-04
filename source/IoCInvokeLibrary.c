@@ -68,22 +68,17 @@ void IoCInvokeLibrary_free(IoCInvokeLibrary *self)
 
 void *IoCInvokeLibrary_rawGetFunctionPointer_(IoCInvokeLibrary *self, const char *name)
 {
-	CInvLibrary *library = DATA(self)->library;
-
-    //printf("[Library] get function pointer library=%d name=%s\n", library, name);
-    if(!library) {
+    if(!DATA(self)->library) {
         IoCInvokeLibrary_load(self);
     }
-
-	void *ep = cinv_library_load_entrypoint(DATA(self)->context, library, name);
-    //printf("[Library] Done - %d\n", ep);
+	void *ep = cinv_library_load_entrypoint(DATA(self)->context, DATA(self)->library, name);
     return ep;
 }
 
 void IoCInvokeLibrary_load(IoCInvokeLibrary *self) {
     IoCInvokeLibrary_getContext_(self);
     
-    //printf("[Library] Name: %s; Context: %d\n", CSTRING(IoObject_getSlot_(self, IOSYMBOL("name"))), DATA(self)->context);
+//    printf("[Library] Name: %s; Context: %d\n", CSTRING(IoObject_getSlot_(self, IOSYMBOL("name"))), DATA(self)->context);
     if (!DATA(self)->library)
 	{
 		const char *name = CSTRING(IoObject_getSlot_(self, IOSYMBOL("name")));
@@ -94,7 +89,7 @@ void IoCInvokeLibrary_load(IoCInvokeLibrary *self) {
 		}
 	}
 
-    //printf("Done - %d.\n", DATA(self)->library);
+//    printf("Done - %d.\n", DATA(self)->library);
 }
 
 IoObject *IoCInvokeLibrary_explicitLoad(IoCInvokeLibrary *self, IoObject *locals, IoMessage *m) {

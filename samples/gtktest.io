@@ -17,7 +17,6 @@ libgobject := Library clone do (
     newFunction("g_signal_connect_data", list(Types Ptr, Types CString, Callback Ptr, Types Ptr, Types Ptr, Types UInt), Types Long)
 )
 
-#libgtk gtk_init
 libgtk gtk_init(0, "") 
 win := libgtk gtk_window_new(0)
 libgtk gtk_window_set_title(win, "Hello world!")
@@ -26,7 +25,7 @@ ev setLibrary(libgobject) setMessage(ev, message(destroyed))
 
 ev destroyed := method(
     "Io Handler invoked!" println
-#    libgtk gtk_main_quit # that crashes.
+    libgtk gtk_main_quit # that crashes.
     return(0)
 )
 
