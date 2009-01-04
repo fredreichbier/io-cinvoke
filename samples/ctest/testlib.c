@@ -12,6 +12,11 @@ int test_struct(MyStruct* s) {
 	return s->a + 1;
 }
 
+void t2(MyStruct s) {
+	printf("@a value is: %d\n", s.a);
+	printf("@b value is: %s\n", s.b);
+}
+
 MyStruct *create_struct(int a) {
     MyStruct *mys = malloc(sizeof(MyStruct));
     mys->a = a;

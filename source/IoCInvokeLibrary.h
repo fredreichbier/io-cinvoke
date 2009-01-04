@@ -27,6 +27,8 @@ IoCInvokeLibrary *IoCInvokeLibrary_rawClone(IoCInvokeLibrary *self);
 void IoCInvokeLibrary_free(IoCInvokeLibrary *self);
 
 void *IoCInvokeLibrary_rawGetFunctionPointer_(IoCInvokeLibrary *self, const char *name);
+void IoCInvokeLibrary_load(IoCInvokeLibrary *self);
+IoObject *IoCInvokeLibrary_explicitLoad(IoCInvokeLibrary *self, IoObject *locals, IoMessage *m);
 CInvContext* IoCInvokeLibrary_getContext_(IoCInvokeLibrary* self);
 CInvContext *getGlobalContext();
 

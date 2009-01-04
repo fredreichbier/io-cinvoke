@@ -82,4 +82,5 @@ writeln("A new structure instance arrived: " .. inst a)
 
 inst b println
 
-
+lib newFunction("t2", list(Types Int, Types CString), Types Void)
+lib t2(33, "zwei");

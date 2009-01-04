@@ -33,6 +33,7 @@ IoCInvokeLibrary *IoCInvokeLibrary_proto(void *state)
 
 	{
 		IoMethodTable methodTable[] = {
+            {"explicitLoad", IoCInvokeLibrary_explicitLoad},
 			{NULL, NULL},
 		};
 		IoObject_addMethodTable_(self, methodTable);
@@ -56,9 +57,9 @@ void IoCInvokeLibrary_free(IoCInvokeLibrary *self)
 		cinv_library_delete(DATA(self)->context, library);
 		library = NULL;
 	}
-	if (DATA(self)->context) {
+	/*if (DATA(self)->context) {
 		cinv_context_delete(DATA(self)->context);
-	}
+	}*/
 
 	free(DATA(self));
 }
@@ -69,20 +70,36 @@ void *IoCInvokeLibrary_rawGetFunctionPointer_(IoCInvokeLibrary *self, const char
 {
 	CInvLibrary *library = DATA(self)->library;
 
-    IoCInvokeLibrary_getContext_(self);
-    //printf("[Library] Name: %s; Context: %d\n", name, DATA(self)->context);
+    //printf("[Library] get function pointer library=%d name=%s\n", library, name);
+    if(!library) {
+        IoCInvokeLibrary_load(self);
+    }
 
-	if (!library)
+	void *ep = cinv_library_load_entrypoint(DATA(self)->context, library, name);
+    //printf("[Library] Done - %d\n", ep);
+    return ep;
+}
+
+void IoCInvokeLibrary_load(IoCInvokeLibrary *self) {
+    IoCInvokeLibrary_getContext_(self);
+    
+    //printf("[Library] Name: %s; Context: %d\n", CSTRING(IoObject_getSlot_(self, IOSYMBOL("name"))), DATA(self)->context);
+    if (!DATA(self)->library)
 	{
 		const char *name = CSTRING(IoObject_getSlot_(self, IOSYMBOL("name")));
 
-		library = DATA(self)->library = cinv_library_create(DATA(self)->context, name);
-		if(!library) {
+		DATA(self)->library = cinv_library_create(DATA(self)->context, name);
+		if(!DATA(self)->library) {
 			printf("Library not loaded: %s\n", cinv_context_geterrormsg(DATA(self)->context));
 		}
 	}
 
-	return cinv_library_load_entrypoint(DATA(self)->context, library, name);
+    //printf("Done - %d.\n", DATA(self)->library);
+}
+
+IoObject *IoCInvokeLibrary_explicitLoad(IoCInvokeLibrary *self, IoObject *locals, IoMessage *m) {
+    IoCInvokeLibrary_load(self);
+    return self;
 }
 
 CInvContext* IoCInvokeLibrary_getContext_(IoCInvokeLibrary* self) {

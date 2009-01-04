@@ -1,32 +1,23 @@
-CFFI
+CInvoke
 
-SFML := Object clone do (
-    Types := CFFI Types clone do (
-    
-    )
-    _functions := Map clone
-
-    initi := method(
-	self lib := Library clone setName("/usr/lib/libcsfml-window.so")
-	appendProto(SFML Types)
-
-	_functions do(
-
-	    add := method(name, retType, argTypeList,
-		atPut(name, Function clone setLibrary(SFML lib) setName(name) setReturnType(retType) setArgumentTypes(argTypeList)) 
-	    )
-	    
-//	    add("sfWindow_Create", Long, list(CString))
-	)
-	self sfVideoMode := Structure clone setLibrary(lib) addMember("Width", SInt) addMember("Height", SInt) addMember("BitsPerPixel", SInt) finish
-    )
-
-    forward := method(
-    m := Message clone setName("call") setArguments(call message arguments)
-    m doInContext(_functions at(call message name))
-    )
+system := Library clone do(
+    setName("/usr/lib/libcsfml-system.so")
+    explicitLoad
 )
 
-SFML initi
-vm := StructureInstance clone setLibrary(SFML lib) setStructure(SFML sfVideoMode) setValue("Width", 640)
-create := SFML sfWindow_Create
+window := Library clone do(
+    setName("/usr/lib/libcsfml-window.so")
+    explicitLoad
+)
+
+graphics := Library clone do(
+    setName("/usr/lib/libcsfml-graphics.so")
+    explicitLoad
+
+    newFunction("sfRenderWindow_Create", list(Types UInt, Types UInt, Types UInt, /* mode */
+                Types CString /* title */, Types ULong /* style */,
+                Types UInt, Types UInt, Types UInt /* settings */),
+                Types Ptr)
+)
+
+render_window := graphics sfRenderWindow_Create(800, 600, 32, "Hello World!", 0, 24, 8, 0)
