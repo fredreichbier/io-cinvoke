@@ -14,7 +14,6 @@
 typedef IoObject IoCInvokeStructureInstance;
 
 typedef struct IoCInvokeStructureInstance {
-	CInvContext* context;
 //	CInvStructure* structure;
 	void* instance;
 } IoCInvokeStructureInstanceData;

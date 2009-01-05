@@ -71,10 +71,19 @@ IoObject* IoCInvokeStructure_addMember(IoCInvokeStructure* self, IoObject* local
 		DATA(self)->structure = cinv_structure_create(context);
 	}
 	char* name = IoMessage_locals_cStringArgAt_(m, locals, 0);
-	cinv_type_t type = IoCInvokeDataType_cinvType_t(IoMessage_locals_valueArgAt_(m, locals, 1));
-	if(!cinv_structure_addmember_value(context, DATA(self)->structure, name, type)) {
-		printf("error with adding member\n");
-	}
+    IoObject *typeobj = IoMessage_locals_valueArgAt_(m, locals, 1);
+    
+    if(ISCInvokeStructure(typeobj)) { /* adding a structure member! */
+        if(!cinv_structure_addmember_struct(context, DATA(self)->structure, name, DATA(typeobj)->structure)) {
+            printf("error with adding struct member\n");
+        }    
+    } else { /* hopefully adding a DataType */
+        cinv_type_t type = IoCInvokeDataType_cinvType_t(typeobj);
+        if(!cinv_structure_addmember_value(context, DATA(self)->structure, name, type)) {
+            printf("error with adding value member\n");
+        }
+    }
+
     // append it to the `memberTypes` Map
     IoObject *memberTypes = IoObject_getSlot_(self, IOSYMBOL("memberTypes"));
     IoMap_rawAtPut(memberTypes, IoMessage_locals_valueArgAt_(m, locals, 0), IoMessage_locals_valueArgAt_(m, locals, 1));

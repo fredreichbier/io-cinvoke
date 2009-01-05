@@ -39,9 +39,9 @@ IoObject *IoCInvokeStructureInstance_proto(void *state)
 
         // Then tag it
         IoObject_tag_(self, IoCInvokeStructureInstance_newTag(state));
-	IoObject_setDataPointer_(self, calloc(1, sizeof(IoCInvokeStructureInstanceData)));
+	    IoObject_setDataPointer_(self, calloc(1, sizeof(IoCInvokeStructureInstanceData)));
         
-	// then register this proto generator
+	    // then register this proto generator
         IoState_registerProtoWithFunc_(state, self, IoCInvokeStructureInstance_proto);
 
         // and finally, define the table of methods this proto supports
@@ -64,7 +64,7 @@ IoObject *IoCInvokeStructureInstance_proto(void *state)
 IoObject *IoCInvokeStructureInstance_rawClone(IoCInvokeStructureInstance *proto)
 {
         IoObject *self = IoObject_rawClonePrimitive(proto);
-	IoObject_setDataPointer_(self, calloc(1, sizeof(IoCInvokeStructureInstanceData)));
+        IoObject_setDataPointer_(self, calloc(1, sizeof(IoCInvokeStructureInstanceData)));
 
         return self;
 }
@@ -86,21 +86,24 @@ IoObject *IoCInvokeStructureInstance_mark(IoCInvokeStructureInstance* self)
 // _free defines any cleanup or deallocation code to run when the object gets garbage collected
 void IoCInvokeStructureInstance_free(IoCInvokeStructureInstance *self)
 {
-	if(DATA(self)->context) {
-		cinv_structure_delete_instance(DATA(self)->context, DATA(self)->instance);
+	if(DATA(self)->instance) {
+		cinv_structure_delete_instance(getGlobalContext(), DATA(self)->instance); // TODO: seems to be a memory bug
 	}
 	free(DATA(self));
 }
 
 IoObject *IoCInvokeStructureInstance_setValue(IoCInvokeStructureInstance *self, IoObject *locals, IoMessage *m)
 {
-	CInvContext* context = DATA(self)->context;
+	CInvContext* context = getGlobalContext();
 	CInvStructure* structure = IoCInvokeStructure_getStructure_(IoObject_getSlot_(self, IOSYMBOL("structure")));
+    
     if(!DATA(self)->instance) {
 		DATA(self)->instance = cinv_structure_create_instance(context, structure);
 	}
-	char* name = IoMessage_locals_cStringArgAt_(m, locals, 0);
-	void* value = IoCInvokeDataType_ValuePointerFromObject_(IoMessage_locals_valueArgAt_(m, locals, 1));
+	
+    char* name = IoMessage_locals_cStringArgAt_(m, locals, 0);
+    void* value = IoCInvokeDataType_ValuePointerFromObject_(IoMessage_locals_valueArgAt_(m, locals, 1));
+
 	if(!cinv_structure_instance_setvalue(context, structure, DATA(self)->instance, name, value)) {
 		printf("Something went wrong with StructureInstance setValue\n");
 	};
@@ -108,24 +111,24 @@ IoObject *IoCInvokeStructureInstance_setValue(IoCInvokeStructureInstance *self, 
 }
 
 IoObject *IoCInvokeStructureInstance_getValue(IoCInvokeStructureInstance *self, IoObject *locals, IoMessage *m) {
- 	CInvContext* context = DATA(self)->context;
+ 	CInvContext* context = getGlobalContext();
 	CInvStructure* structure = IoCInvokeStructure_getStructure_(IoObject_getSlot_(self, IOSYMBOL("structure")));
     if(!DATA(self)->instance) {
 		DATA(self)->instance = cinv_structure_create_instance(context, structure); // ... is that intelligent?
 	}
 	char* name = IoMessage_locals_cStringArgAt_(m, locals, 0);
 	void* value = cinv_structure_instance_getvalue(context, structure, DATA(self)->instance, name);
+
     IoObject *memberType = IoMap_rawAt(IoObject_getSlot_(
                 IoObject_getSlot_(self, IOSYMBOL("structure")), IOSYMBOL("memberTypes")), 
                 IOSYMBOL(name));
+
     IoObject *io_value = IoCInvokeDataType_objectFromData_(memberType, value);
     return io_value;
 }
 
 IoObject *IoCInvokeStructureInstance_setLibrary(IoCInvokeStructureInstance *self, IoObject *locals, IoMessage *m)
 {
-	IoObject* lib = IoMessage_locals_valueArgAt_(m, locals, 0);
-	DATA(self)->context = IoCInvokeLibrary_getContext_((IoCInvokeLibrary*)lib);
 	return self;
 }
 
@@ -135,7 +138,6 @@ void* IoCInvokeStructureInstance_valuePointer(IoCInvokeStructureInstance* self) 
 
 IoObject *IoCInvokeStructureInstance_objectFromData_(IoObject *structure, void *data) {
     IoObject *self = IoCInvokeStructureInstance_new(((IoState *)(IoObject_tag(structure)->state))); // because IOSTATE depends on `self`
-    DATA(self)->context = getGlobalContext();
     DATA(self)->instance = data;
     IoObject_setSlot_to_(self, IOSYMBOL("structure"), structure);
     return self;

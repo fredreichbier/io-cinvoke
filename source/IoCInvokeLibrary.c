@@ -72,6 +72,10 @@ void *IoCInvokeLibrary_rawGetFunctionPointer_(IoCInvokeLibrary *self, const char
         IoCInvokeLibrary_load(self);
     }
 	void *ep = cinv_library_load_entrypoint(DATA(self)->context, DATA(self)->library, name);
+    if(!ep) {
+        IoState_error_(IOSTATE, NULL, "There is no function named like '%s' (\
+entry point is NULL) - maybe it's a macro?", name);
+    }
     return ep;
 }
 

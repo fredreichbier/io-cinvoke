@@ -12,8 +12,10 @@ CInvoke Function do(
 	newSlot("argumentTypes", "")
 
     asMethod := method(
-        block(
-            call message setName("call") asMessageWithEvaluatedArgs doInContext(self)
-        ) setIsActivatable(true) setScope(self)
+        bl := block(
+            call message setName("call") asMessageWithEvaluatedArgs(call sender) doInContext(self)
+        ) 
+        bl setScope(self) 
+        bl setIsActivatable(true)
     )
 )

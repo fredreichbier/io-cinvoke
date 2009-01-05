@@ -5,4 +5,8 @@ CInvoke Structure do(
     Ptr := method(
         Pointer toType(self)
     )
+
+    instance := method(
+        StructureInstance clone setStructure(self)
+    )
 )

@@ -101,7 +101,6 @@ void *IoCInvokeDataType_ValuePointerFromObject_(IoObject *o)
 	}
 	else if (ISSEQ(o))
 	{
-        //printf("seq\n");
 		return (char **)IoObject_dataPointer(o);
 	}
 	else if (ISNIL(o))
